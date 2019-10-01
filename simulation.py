@@ -37,20 +37,37 @@ cohorts = np.random.choice([0, 0, 0, 1], (trials, selection))
 # from the snack vending machine. If on monday the machine is restocked 
 # with 17 poptart packages, how likely is it that I will be able to buy 
 # some poptarts on Friday afternoon?
-
+trials = 10_000
+poptarts_per_day = 3 # +-1.5
+poptarts = 17
+# 15 +- 7.5, so 7.5, 15, or 22.5
+(np.random.randint(7.5, 22.5, (trials, 1)) < 17).sum()/trials * 100
 
 
 # 5. Compare Heights:
 
     # Men have an average height of 178 cm and standard deviation of 8cm.
 
+    inches = 178 / 2.54
+    feet = inches / 12
 
+    m_height = 178
+    m_std_dev_height = 8
 
     # Women have a mean of 170, sd = 6cm.
 
-
+    w_height = 170
+    w_std_dev_height = 6
 
     # If a man and woman are chosen at random, P(woman taller than man)?
+
+    trials = 10_000
+
+    # men range 170 - 186
+    # women range 164 - 176
+
+    (np.random.uniform(170, 186, (trials, 1)) < np.random.uniform(164, 176, (trials, 1))).sum() / trials * 100
+   
 
 
 # 6. When installing anaconda on a student's computer, there's a 1 in 250 
