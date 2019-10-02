@@ -81,9 +81,9 @@ stats.binom(100, .01).sf(0)
 
 students = .9*(22*3)
 student_cleans = .03*students
-stats.binom(students, .03).pmf(1) # each day
-1 - stats.binom(students, .03).pmf(2)
-1 - stats.binom(students, .03).pmf(5)
+stats.binom(students, .03).sf(0) # each day
+1 - stats.binom(students, .03).sf(1)
+1 - stats.binom(students, .03).sf()
 
 # 6. You want to get lunch at La Panaderia, but notice that the line is usually very 
 # long at lunchtime. After several weeks of careful observation, you notice that 
