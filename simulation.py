@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-np.random.seed(123)
+np.random.seed(3)
 
 # 1. How likely is it that you roll doubles when rolling two dice?
 
@@ -22,6 +22,7 @@ heads = 1
 tails = 0
 flips = pd.DataFrame(np.random.choice([0,1], (trials, coins)))
 flips[flips.sum(axis=1) == 3].count()/flips.count() * 100
+flips[flips.sum(axis=1) > 3].count()/flips.count() * 100
 
 # 3. There are approximitely 3 web development cohorts for every 1 data 
 # science cohort at Codeup. Assuming that Codeup randomly selects an 
@@ -33,6 +34,10 @@ selection = 1
 cohorts = np.random.choice([0, 0, 0, 1], (trials, selection))
 (cohorts.sum(axis=1) > 0).astype(int).mean() * 100
 
+np.random.choice([0, 0, 0, 1], (trials, 2))
+
+(((np.random.choice([0, 0, 0, 1], (trials, 2))).sum(axis=1) == 2).sum() / 10_000) * 100
+
 # 4. Codeup students buy, on average, 3 poptart packages (+- 1.5) a day 
 # from the snack vending machine. If on monday the machine is restocked 
 # with 17 poptart packages, how likely is it that I will be able to buy 
@@ -42,7 +47,6 @@ poptarts_per_day = 3 # +-1.5
 poptarts = 17
 # 15 +- 7.5, so 7.5, 15, or 22.5
 (np.random.randint(7.5, 22.5, (trials, 1)) < 17).sum()/trials * 100
-
 
 # 5. Compare Heights:
 
@@ -66,8 +70,8 @@ poptarts = 17
     # men range 170 - 186
     # women range 164 - 176
 
-    (np.random.uniform(170, 186, (trials, 1)) < np.random.uniform(164, 176, (trials, 1))).sum() / trials * 100
-   
+    (np.random.normal(178, 8, (trials, 1)) < np.random.normal(170, 6, (trials, 1))).sum() / trials * 100
+     (np.random.normal(178, 8, (trials, 1)) < np.random.normal(170, 6, (trials, 1))).mean() * 100
 
 
 # 6. When installing anaconda on a student's computer, there's a 1 in 250 
@@ -75,30 +79,78 @@ poptarts = 17
 # What are the odds that after having 50 students download anaconda, 
 # no one has an installation issue? 100 students?
 
+trials = 10_000
+p = 1/250
+students = 50
+students = 100
+
+1 - (((np.random.random((trials, 50)) < p).sum(axis=1) > 0).mean())
+1 - (((np.random.random((trials, 100)) < p).sum(axis=1) > 0).mean())
+1 - (((np.random.random((trials, 150)) < p).sum(axis=1) > 0).mean())
 
 
     # What is the probability that we observe an installation issue within 
     # the first 150 students that download anaconda?
 
-
+1 - (((np.random.random((n, 150)) < p).sum(axis=1) > 0).mean())
 
     # How likely is it that 450 students all download anaconda without an 
     # issue?
 
-
+1 - (((np.random.random((n, 450)) < p).sum(axis=1) > 0).mean())
 
 # 7. There's a 70% chance on any given day that there will be at least one 
 # food truck at Travis Park. However, you haven't seen a food truck 
 # there in 3 days. How unlikely is this?
 
+    # chance of [no_food_truck, no_food_truck, no_food_truck] = 3 * .3 * .3 * .3
 
+1 - (3 * .3**3)
+
+travis_park_food_truck = .7
+((np.random.random((trials, 3)) > travis_park_food_truck).sum(axis=1) == 0).sum()/trials
+
+    # or
+
+lunches = np.random.choice(['food truck', 'no food truck'], (trials, 3), p=[.7, .3])
+(lunches == 'no food truck').all(axis=1).mean()
 
     # How likely is it that a food truck will show up sometime this week?
 
+1 - (3 * .3**7)
 
+((np.random.random((trials, 3)) > travis_park_food_truck).sum(axis=1) == 0).sum()/trials
+
+(lunches == 'food truck').any(axis=1).mean()
 
 # 8. If 23 people are in the same room, what are the odds that two of them 
 # share a birthday? What if it's 20 people? 40?
 
+    # (365! / (365 - 23)!) / (365^23)
+import math
+1 - ((math.factorial(365) / math.factorial(365-23)) / 365**23)
+1 - ((math.factorial(365) / math.factorial(365-20)) / 365**20)
+1 - ((math.factorial(365) / math.factorial(365-40)) / 365**40)
+
+birthdays = pd.DataFrame(np.random.randint(1, 365, (10_000, 23)))
+birthdays.count(axis=1)
+birthdays
+birthdays.iterrows()
+birthdays.iloc[0, :]
+birthdays[birthdays.nunique(axis=1) == birthdays.count(axis=1)].count()/trials
+    #or
+(birthdays.nunique(axis=1) == birthdays.count(axis=1)).mean()
+
+    # with numpy
+birthdays = (np.random.randint(1, 365, (10_000, 23)))
+people = 23
+
+row = (np.random.choice(range(365)), people)
+row
+
+
+
+
+# take value counts of each row in pandas
 
 
