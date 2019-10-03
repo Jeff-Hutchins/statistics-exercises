@@ -5,6 +5,9 @@ import pandas as pd
 
 np.random.seed(123)
 
+# theoretical = using scipy to answer questions
+# experimental = using simulation to answer questions
+
 # Do your work for this exercise in either a python script named probability_distributions.py 
 # or a jupyter notebook named probability_distributions.ipynb.
 
@@ -24,54 +27,96 @@ x = np.arange(stats.poisson.ppf(0.01, mu),
 ax.plot(x, stats.poisson.pmf(x, mu), 'bo', ms=8, label='poisson pmf')
 ax.vlines(x, 0, stats.poisson.pmf(x, mu), colors='b', lw=5, alpha=0.5)
 
+
+s = np.random.poisson(2, 10000)
+count, bins, ignored = plt.hist(s, 14, normed=True)
+plt.show()
+
     # What is the probability that no cars drive up in the noon hour?
 
+# theoretical
 stats.poisson(2).pmf(0)
+
+# experimental
+
+np.random.poisson(2, 10000)
+
+number_of_cars = pd.DataFrame(np.random.poisson(2, 10000))
+(number_of_cars == 0).mean()
 
     # What is the probability that 3 or more cars come through the drive through?
 
-stats.poisson(2).sf(3)
+# theoretical
+stats.poisson(2).sf(2)
+
+# experimental
+(number_of_cars >= 3).mean()
 
     # How likely is it that the drive through gets at least 1 car?
 
-stats.poisson(2).sf(1)
+# theoretical
+stats.poisson(2).sf(0)
+
+# experimental
+(number_of_cars >= 1).mean()
 
 # 2. Grades of State University graduates are normally distributed with a mean of 3.0 and a 
 # standard deviation of .3. Calculate the following:
 
     # What grade point average is required to be in the top 5% of the graduating class?
 
-trials = 10_000
+# theoretical
 grades_dist = stats.norm(3, .3)
 grades_dist.ppf(.95)
+
+# experimental with numpy
+trials = 10_000
+grades_array = np.random.normal(3, .3, trials)
+np.quantile(grades_array, .95)
+
+# experimental with pandas
+pd.DataFrame(np.random.normal(3, .3, trials)).quantile(.95)
 
     # An eccentric alumnus left scholarship money for students in the third decile from the 
     # bottom of their class. Determine the range of the third decile. Would a student with a 
     # 2.8 grade point average qualify for this scholarship?
 
+# theoretical
 grades_dist.isf(.8)
 grades_dist.isf(.7)
+
+# experimental
 
 
 # 3. A marketing website has an average click-through rate of 2%. One day they observe 4326 
 # visitors and 97 click-throughs. How likely is it that this many people or more click through?
-click_rate * click_throughs
+
+# theoretical
 click_rate = .02
 visitors = 4326
 click_throughs = 97
 97/4326
-stats.poisson().pmf()
+stats.poisson(.02*4326).sf(97) * 100
+
+# experimental
 
 # 4. You are working on some statistics homework consisting of 100 questions where all of 
     # the answers are a probability rounded to the hundreths place. Looking to save time, 
     # you put down random probabilities as the answer to each question.
 
+# theoretical
 answers = np.round(np.random.sample(100), decimals=2)
+
+# experimental
 
     # What is the probability that at least one of your first 60 answers is correct?
 
+# theoretical
 stats.binom(60, .01).sf(0)
 stats.binom(100, .01).sf(0)
+
+# experimental
+
 
 # 5. The codeup staff tends to get upset when the student break area is not cleaned up. 
 # Suppose that there's a 3% chance that any one student cleans the break area when 
@@ -79,11 +124,15 @@ stats.binom(100, .01).sf(0)
 # students visit the break area. How likely is it that the break area gets cleaned 
 # up each day? How likely is it that it goes two days without getting cleaned up? All week?
 
-students = .9*(22*3)
+# theoretical
+students = round(.9*(22*3))
 student_cleans = .03*students
 stats.binom(students, .03).sf(0) # each day
-1 - stats.binom(students, .03).sf(1)
-1 - stats.binom(students, .03).sf()
+stats.binom(students, .03).sf(1) # two days
+stats.binom(students, .03).sf(4) # 5 days
+
+# experimental
+
 
 # 6. You want to get lunch at La Panaderia, but notice that the line is usually very 
 # long at lunchtime. After several weeks of careful observation, you notice that 
@@ -94,4 +143,10 @@ stats.binom(students, .03).sf(0) # each day
 # you have to go back to class? Assume you have one hour for lunch, and ignore 
 # travel time to and from La Panaderia.
 
+# theoretical
 stats.norm(40, 6).cdf(45)
+
+# experimental
+
+
+
