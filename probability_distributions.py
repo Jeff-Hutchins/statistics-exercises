@@ -68,32 +68,43 @@ stats.poisson(2).sf(0)
 # theoretical
 grades_dist = stats.norm(3, .3)
 grades_dist.ppf(.95)
+grades_dist.isf(.05)
 
 # experimental with numpy
 trials = 10_000
 grades_array = np.random.normal(3, .3, trials)
 np.quantile(grades_array, .95)
+np.percentile(grades_array, 95)
 
 # experimental with pandas
-pd.DataFrame(np.random.normal(3, .3, trials)).quantile(.95)
+pd.Series(np.random.normal(3, .3, trials)).quantile(.95)
 
     # An eccentric alumnus left scholarship money for students in the third decile from the 
     # bottom of their class. Determine the range of the third decile. Would a student with a 
     # 2.8 grade point average qualify for this scholarship?
 
 # theoretical
-grades_dist.ppf(.7)
-grades_dist.ppf(.8)
+grades_dist.ppf(.3)
+grades_dist.ppf(.2)
 
-grades_dist.isf(.3)
-grades_dist.isf(.2)
+grades_dist.isf(.7)
+grades_dist.isf(.8)
 
 # experimental
-np.quantile(grades_array, .7)
-np.quantile(grades_array, .8)
+np.quantile(grades_array, .3)
+np.quantile(grades_array, .2)
 
-pd.DataFrame(np.random.normal(3, .3, trials)).quantile(.7)
-pd.DataFrame(np.random.normal(3, .3, trials)).quantile(.8)
+pd.Series(np.random.normal(3, .3, trials)).quantile(.2)
+pd.Series(np.random.normal(3, .3, trials)).quantile(.3)
+stats.norm(3.0, .3).ppf([.2, .3])
+
+# If I have a GPA of 3.5, what percentile am I in?
+
+# theoretical
+stats.norm(3.0, .3).cdf(3.5)
+
+# experimental
+np.quantile(grades_array, )
 
 # 3. A marketing website has an average click-through rate of 2%. One day they observe 4326 
 # visitors and 97 click-throughs. How likely is it that this many people or more click through?
@@ -102,12 +113,15 @@ pd.DataFrame(np.random.normal(3, .3, trials)).quantile(.8)
 click_rate = .02
 visitors = 4326
 click_throughs = 97
-97/4326
-stats.poisson(.02*4326).sf(97) * 100
+
+stats.poisson(.02*4326).sf(96) * 100
+(stats.binom(4326, .02).rvs(10000) >= 97).mean()
 
 # experimental
 (pd.DataFrame(np.random.poisson(4326*.02, 10000)) >= 97).mean()
 
+
+### REVIEW THIS QUESTION FOR QUIZ
 
 # 4. You are working on some statistics homework consisting of 100 questions where all of 
     # the answers are a probability rounded to the hundreths place. Looking to save time, 
@@ -118,8 +132,8 @@ answers = pd.DataFrame(np.round(np.random.sample(100), decimals=2))
     # What is the probability that at least one of your first 60 answers is correct?
 
 # theoretical
-stats.binom(60, .01).sf(0)
-stats.binom(100, .01).sf(0)
+stats.binom(60, 1/101).sf(0)
+stats.binom(100, 1/101).sf(0)
 
 # experimental
 (np.random.binomial(60, .01, 10000) > 0).mean()
@@ -134,12 +148,16 @@ stats.binom(100, .01).sf(0)
 # theoretical
 students = round(.9*(22*3))
 student_cleans = .03*students
-stats.binom(students, .03).cdf(0) # each day
- 1 - (stats.binom(students, .03).cdf(1)) # two days
-1 - (stats.binom(students, .03).cdf(4)) # 5 days
+stats.binom(students, .03).sf(0) # cleaned each day
+stats.binom(students * 2, .03).pmf(0) # goes two days without being cleaned(odds of zero successes)
+(1 - stats.binom(students, .03).sf(0)) ** 2 # goes two days without being cleaned
+(1 - stats.binom(students, .03).sf(0)) ** 5
+
+(stats.binom(students, .03).sf(0)) ** 2 # gets cleaned two days in a row
+(stats.binom(students, .03).sf(0)) ** 3 # gets cleaned three days in a row
 
 # experimental
-(np.random.binomial(students, .03, 10000) == 0).mean()
+1 - (np.random.binomial(students, .03, 10000) == 0).mean()
 (np.random.binomial(students, .03, 10000) >= 2).mean()
 (np.random.binomial(students, .03, 10000) >= 5).mean()
 
@@ -209,7 +227,7 @@ stats.norm(salaries_mean, salaries_std).cdf(80000) - stats.norm(salaries_mean, s
 
 # experimental
 salaries_np.where(np.logical_and(a>60000, a<80000))
-salaries_np
+salaries_dataframe
 
     # What do the top 5% of employees make?
 
