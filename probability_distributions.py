@@ -114,7 +114,11 @@ click_rate = .02
 visitors = 4326
 click_throughs = 97
 
+## poisson just happens to work here because of the large number of trials
 stats.poisson(.02*4326).sf(96) * 100
+
+### BINOMIAL IS CORRECT WAY TO MODEL THIS PROBLEM
+## should use binomial if we have an upper bound on successes
 (stats.binom(4326, .02).rvs(10000) >= 97).mean()
 
 # experimental
@@ -170,6 +174,7 @@ stats.binom(students * 2, .03).pmf(0) # goes two days without being cleaned(odds
 # you have to go back to class? Assume you have one hour for lunch, and ignore 
 # travel time to and from La Panaderia.
 
+### DOES NOT TAKE INTO ACCOUNT MY ORDER TIME, ASSUMES I ORDER INSTANTANEOUSLY
 # theoretical
 stats.norm(40, 6).cdf(45)
 
@@ -188,15 +193,22 @@ employees_query = "SELECT * from employees"
 employees = pd.read_sql(employees_query, url)
 employees.head()
 
+
+### If there's a lot of data in the tables then do calculations like mean, std, etc, on SQL
+### and not on pandas, on your computer, where you likely do not have enough RAM.
 salaries_query = "SELECT * from salaries where to_date = '9999-01-01'"
+    ## or
+salaries_query = "SELECT * from salaries where to_date > NOW()"
 salaries = pd.read_sql(salaries_query, url)
 
 type(salaries)
 salaries_mean = salaries.salary.mean()
 salaries_std = salaries.salary.std()
+salaries
 
 # theoretical
 stats.norm(salaries_mean, salaries_std)
+
 
 
 # experimental
@@ -226,8 +238,7 @@ stats.norm(salaries_mean, salaries_std).cdf(80000) - stats.norm(salaries_mean, s
 
 
 # experimental
-salaries_np.where(np.logical_and(a>60000, a<80000))
-salaries_dataframe
+((salaries.salary > 65000) & (salaries.salary < 80000)).mean()
 
     # What do the top 5% of employees make?
 
