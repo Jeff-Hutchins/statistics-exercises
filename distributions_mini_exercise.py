@@ -55,4 +55,3 @@ die_distribution.ppf(1/3)
 
 die_distribution.isf(1/6)
 
-
