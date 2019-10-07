@@ -250,3 +250,9 @@ stats.norm(salaries_mean, salaries_std).ppf(.9999996825)
 salaries_dataframe.quantile(.95)
 
 (1/6)**100
+
+
+#quiz
+stats.binom(618, .1).sf(69)
+
+stats.norm(50, 15).cdf(60)

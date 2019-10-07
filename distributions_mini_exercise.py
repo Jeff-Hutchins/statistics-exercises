@@ -13,7 +13,7 @@ die_distribution.pmf(1)
 
 # There's a 1 in 2 chance that I'll roll higher than what number?
 
-die_distribution.ppf(1/2)
+die_distribution.isf(1/2)
 
 # What is the probability of rolling less than or equal to 2?
 
@@ -25,7 +25,7 @@ die_distribution.ppf(5/6)
 
 # There's a 1 in 2 chance that my roll will be less than or equal to what number?
 
-die_distribution.isf(1/2)
+die_distribution.ppf(1/2)
 
 # What is the probability of rolling less than or equal to 6?
 
