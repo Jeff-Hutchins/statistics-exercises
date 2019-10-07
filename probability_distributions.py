@@ -249,3 +249,4 @@ stats.norm(salaries_mean, salaries_std).ppf(.9999996825)
 # experimental
 salaries_dataframe.quantile(.95)
 
+(1/6)**100

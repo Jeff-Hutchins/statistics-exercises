@@ -70,8 +70,6 @@ poptarts = 17
     # men range 170 - 186
     # women range 164 - 176
 
-    (np.random.normal(178, 8, (trials, 1)) < np.random.normal(170, 6, (trials, 1))).sum() / trials * 100
-     (np.random.normal(178, 8, (trials, 1)) < np.random.normal(170, 6, (trials, 1))).mean() * 100
 
 
 # 6. When installing anaconda on a student's computer, there's a 1 in 250 
