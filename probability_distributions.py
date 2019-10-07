@@ -256,3 +256,11 @@ salaries_dataframe.quantile(.95)
 stats.binom(618, .1).sf(69)
 
 stats.norm(50, 15).cdf(60)
+
+
+from pydataset import data
+
+mpg = data('mpg')
+mpg
+
+mpg['class']

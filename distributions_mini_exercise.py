@@ -55,3 +55,16 @@ die_distribution.ppf(1/3)
 
 die_distribution.isf(1/6)
 
+
+
+
+def get_db_url(database_name, table):
+    import pandas as pd
+    from env import host, user, password
+    url = f'mysql+pymysql://{user}:{password}@{host}/{database_name}'
+    query = f"SELECT * FROM {database_name}"
+    database_name = pd.read_sql(table, url)
+    return database_name
+
+salaries = get_db_url("employees", "salaries")
+salaries
